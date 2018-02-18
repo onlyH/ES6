@@ -29,5 +29,14 @@ se6基础语法
    	console.log(userName,age)
    }
    foo(obj)
-     
-     ```
+ ```
+#### 模版字符串
+ - 简化字符串的拼接，模版字符串必须用``包含，变化的部分用${xxx}定义
+ ```
+ let obj1 = {
+ 	userName:'darker',
+ 	age:13
+ }
+ let str = `我的名字叫：${obj1.userName},今年我：${obj1.age}岁`;
+ console.log(str)
+ ```

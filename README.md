@@ -1,4 +1,67 @@
-# ES6
+## 理解ES
+1. 全称: ECMAScript
+2. js语言的规范
+3. 我们用的js是它的实现
+4. js的组成
+  * ECMAScript(js基础)
+  * 扩展-->浏览器端
+    * BOM
+    * DOM
+  * 扩展-->服务器端
+    * Node.js
+      
+## ES5
+1. **严格模式**
+  * 运行模式: 正常(混杂)模式与严格模式
+  * 应用上严格式: 'strict mode';
+  * 作用: 
+    * 使得Javascript在更严格的条件下运行
+    * 消除Javascript语法的一些不合理、不严谨之处，减少一些怪异行为
+    * 消除代码运行的一些不安全之处，保证代码运行的安全
+    * 需要记住的几个变化
+      * 声明定义变量必须用var
+      * 禁止自定义的函数中的this关键字指向全局对象
+      * 创建eval作用域, 更安全
+      
+2. **JSON对象**
+  * 作用: 用于在json对象/数组与js对象/数组相互转换
+  * JSON.stringify(obj/arr)
+      js对象(数组)转换为json对象(数组)
+  * JSON.parse(json)
+      json对象(数组)转换为js对象(数组)
+      
+3. Object扩展
+  * Object.create(prototype[, descriptors]) : 创建一个新的对象
+    * 以指定对象为原型创建新的对象
+    * 指定新的属性, 并对属性进行描述
+      * value : 指定值
+      * writable : 标识当前属性值是否是可修改的, 默认为true
+      * **get方法** : 用来得到当前属性值的回调函数
+      * **set方法** : 用来监视当前属性值变化的回调函数
+  * Object.defineProperties(object, descriptors) : 为指定对象定义扩展多个属性
+  
+4. Array扩展
+  * Array.prototype.indexOf(value) : 得到值在数组中的第一个下标
+  * Array.prototype.lastIndexOf(value) : 得到值在数组中的最后一个下标
+  * **Array.prototype.forEach(function(item, index){}) : 遍历数组**
+  * **Array.prototype.map(function(item, index){}) : 遍历数组返回一个新的数组**
+  * **Array.prototype.filter(function(item, index){}) : 遍历过滤出一个子数组**
+  
+5. **Function扩展**
+  * Function.prototype.bind(obj)
+      * 将函数内的this绑定为obj, 并将函数返回
+  * 面试题: 区别bind()与call()和apply()?
+      * fn.bind(obj) : 指定函数中的this, 并返回函数
+      * fn.call(obj) : 指定函数中的this,并调用函数
+      
+6. Date扩展
+  * Date.now() : 得到当前时间值
+  
+
+
+
+
+## ES6
 se6基础语法
 
 #### let,const
@@ -365,6 +428,384 @@ yield getNees(url)
 let SX = sendXML();
 SX.next()
  ```
+ 
+ #### async(es2017)
+  - 概念：真正意义上去解决异步回调的问题，同步流程表达异步操作
+  - 本质：Generator的语法糖
+  - 语法：
+  		async function foo() {
+  			await 异步操作;
+  			await 同步操作;
+  		}
+  - 特点：
+  1. 不需要像generator去调用next方法，遇到await等待，当前的异步操作完成就往下执行
+  2. 返回的总是promise对象，可以用then方法进行下一步操作
+  3. async取代generator函数的星号*，await取代generator的tield
+  4. 语意上更为明确，使用简单
+  ```
+  async function foo() {
+  return new Promise(resolve =>{
+  setTimeout(function() {
+  	resolve()
+  },2000)
+  //setTimeout(resolve,2000)
+  })
+  }
+  async function oop() {
+  console.log('开始执行',new Date().toTimeString())
+  	await foo();
+  console.log('执行结束',new Date().toTimeString())
+  }
+  oop()
+  
+  //async的await返回值
+  function test() {
+  return 'xxx'
+  }
+  async function test1() {
+  let result = await test();
+  console.log(result)
+  }
+  test1()
+  
+  function test3() {
+  	return 'xxx'
+  }
+  async function test4() {
+  	let result = await Promise.resolve('yes,promise')
+  	console.log(result);
+  	result = await Promise.reject('no,err')
+  }
+  test4()
+  
+  async function test5(url) {
+  	return new Promise((resolve,reject) =>{
+  	$.ajax({
+  	methods:'GET',
+  	url,
+  	success:data => resolve(data)
+  	srrorr:error => reject(error)
+  	})
+  	})
+  }
+  async function test6() {
+  	let result = await test5('http://localhost:8080/news?id=3');
+  	console.log(result);
+  	result = await test5('http://localhost:8080' + result.commentUrl);
+  	console.log(result)
+  }
+  test6()
+ 
+  
+  async function newPaper(url) {
+  	return new Promise((resolve,reject) =>{
+  		$.ajax({
+  			methods:'GET',
+  			url,
+  			success:data =>resolve(data)
+  			error:error =>resolve(false);
+  		})
+  	})
+  }
+  async function newUrl() {
+  	let result = await newPaper('http://localhost:8080/news?id=1');
+  	console.log(result);
+  	if(!result) {
+  		alert('暂时没有内容。。');
+  		return;
+  	}
+  	result = await newPaper('http://localhost:8080' + result.commentUrl);
+  	console.log(result)
+  }
+  ```
+ 
+ #### class 类的使用
+ 1. 通过class定义类/实现类的继承
+ 2. 在类中通过constructor定义构造方法
+ 3. 通过new来创建类的实例
+ 4. 通过extend来实现类的继承
+ 5. 通过super调用父类的构造方法
+ 6. 重写从父类中继承的一般方法
+ ```
+ function Person(name,age) {
+ 	this.name = name;
+ 	this.age = age;
+ }
+ let person = new Person('lee',32)
+ 
+ class Person {
+ //类的构造方法
+ 	constructor(name,age) {
+ 		this.name = name;
+ 		this.age = age
+ 	}
+ 	//类的一般方法
+ 	showName() {
+ 		console.log(this.name,this.age)
+ 	}
+ }
+ let person = new Person('lee',32)
+ console.log(person);
+ person.showName()
+ 
+ class childPerson extends Person {
+ 	constructor(name,age,sex) {	
+ 	super(name,age);//调用父类的构造方法
+ 	this.sex = sex;
+ 	}
+ 	//父类的方法重写
+ 	showName() {
+ 	console.log('调用子类的方法'+this.name,this.age,this.sex)
+ 	}
+ } 
+ let p1 = new childPerson('lee',22,'man')
+ p1.showName()
+ ```
+ 
+ #### es6字符串，数组的扩展
+ 1. includes(str) : 判断是否包含指定的字符串
+ 2. startsWith(str) : 判断是否以指定字符串开头
+ 3. endWidth(str): 判断是否以指定的字符串结尾
+ 4. repeat(count) :重复指定次数
+ ```
+ let str = 'abcdefja';
+ str.includes('a') //true
+ str.startsWith('a') //true
+ str.endsWith('v') //false
+str.repeat(3)  //"abcdefjaabcdefjaabcdefja"
+ ```
+ 
+ #### 数值的扩展
+ 1. 二进制与八进制数值表示法：二进制用0b，八进制用0o
+ 2. Number.isFinite(i) : 判断是否是有限大的数
+ 3. Number.isNaN(i) : 判断是否为NaN
+ 4. Number.isInteger(i) : 判断是否为整数
+ 5. Number.parseInt(i) : 将字符串转为对应的数值
+ 6. Math.trunc(i) : 直接去除小数部分
+ ```
+ let arr = 3.1415926;
+ Number.isFinite(arr); //true
+ Number.parseInt(arr);//3
+ Number.isNaN(arr);//false
+ Number.isInteger(arr);//false
+ Math.trunc(arr);//3
+ console.log(0b1010) //10
+ console.log(0o56)  //46
+ console.log(Number.isInteger('123.0'))//false
+ console.log(Number.parseInt('123abc456')); //123
+ console.log(Number.parseInt('a123b456'))//NaN
+ 
+ ```
+ 
+ #### 数组方法的扩展
+ 1. Array.from(v) : 将伪数组对象或可遍历对象转化为真数组
+ 2. Array.of(v1,v2,v3) : 将一系列值转化为数组
+ 3. find(function(value,index,arr){return true}) :找出第一个满足条件返回true的元素
+ 4. findIndex(function(v1,v2,v3){return true}) : 找出第一个满足条件返回true元素的下标
+ ```
+ let btns = document.getElementsByTagName('button');
+ Array.from('btns').forEach(function(item,index) {
+ 	console.log(item)
+ })
+ 
+ var arr = [1,2,'abc',true];
+ Array.of(arr)//(4) [1, 2, "abc", true]
+ 
+ let arr2 = [1,2,3,4,5];
+ let result = arr2.find(function(item,index){
+ 	return item>2
+ })
+ console.log(result)
+ 
+ let arr3 = [1,2,3,4,5];
+ let result = arr3.findIndex(function(item,index) {
+ 	return item>2
+ })
+ console.log(result) //2  下标
+ 
+ ```
+ 
+ #### 对象方法的扩展
+ 1. Object.is(v1,v2) : 判断两个数据是否完全相同
+ 2. Object.assign(target,source1,source2 ... ) : 将源对象的属性复制到目标对象上
+ 3. 直接操作 __proto__属性
+ let obj2 ={};
+ obj2.__proto__ = obj1;
+ ```
+ console.log(Object.is(0,-0));//false
+ console.log(0 == -0);//true
+ 
+ console.log(Object.is(NaN,NaN)) //true
+ console.log(NaN == NaN) //false
+ 
+ let obj1 = {};
+ let obj2 = {userName :'lee'};
+ let obj3 = {sex:'man'};
+ Object.assign(obj1,obj2,obj3) //{userName: "lee", sex: "man"}
+ 
+ let obj4 = {};
+ let obj5 = {money:100};
+ obj4.__proto__ = obj5;
+ console.log(obj4);//{}
+ console.log(obj4.money)//100
+ ```
+ 
+ #### 深度克隆
+ ```
+ let str = 123;
+ let str2 = str;
+ console.log(str2)//123
+ str2 = 'a';
+ console.log(str)//123
+ console.log(str2) //a
+ 
+ let bo1 = true;
+ let bo2 = bo1;
+ console.log(bo2);//true
+ bo2 = false;
+ console.log(bo1);//true
+ console.log(bo2)//false
+ 
+ let obj2 = {userName:'lee',age:12};
+ let obj3 = obj2;
+ console.log(obj3);//{userName: "lee", age: 12}
+ obj3.userName = 'darker';
+ console.log(obj2)// {userName: "darker", age: 12}
+ 
+ //拷贝数组/对象 没有生成新的数据而是复制了一份引用
+ let arr1 = [1,2,true,'abc'];
+ let arr2 = arr1;
+ arr2[0] = 'yes';
+ console.log(arr1,arr2)//(4) ["yes", 2, true, "abc"] (4) ["yes", 2, true, "abc"]
+
+ ```
+ 
+  - 拷贝数据
+  1. 基本拷贝：会生成新的数据，修改拷贝后的数据不影响原数据
+  2. 对象/数组：不会生成新的数据，拷贝是引用，拷贝后的数据修改会影响原数据
+  - 拷贝数据的方法：
+  1. 直接赋值给一个变量 ---浅拷贝（影响原数据）
+  2. Array.prototype.concat() --浅   
+  3. Array.prototype.slice() --浅
+  4. Object.assign()  --浅
+  5. JSON.parse(JSON.stringify())  --深拷贝，拷贝的数据里不能有函数，处理不了
+  
+  - 浅拷贝（数组/对象）：
+     - 特点：拷贝的引用，修改拷贝后的数据会影响原数据,使得原数据不安全
+  - 深拷贝
+  	- 特点：生成新的数据，修改拷贝后的数据不会影响原数据
+  
+ ```
+ let obj1 = {userName:'dd'}
+ let obj2 = Object.assign(obj1);
+ console.log(obj2);//{userName: "dd"}
+ obj2.userName = 'cc';
+ console.log(obj1)//{userName: "cc"}
+ 
+ 
+ let arr = [1,2,{userName:'abc'}];
+ let arr1 =arr.concat();
+ console.log(arr1);//{userName: "d"}
+ arr1[2].userName = 'd';
+ console.log(arr);//{userName: "d"}
+ 
+ let arr = [1,2,{userName:'darker'},function fun(){}]; //函数会变成null
+ let arr1 = arr.slice();
+ console.log(arr1);//{userName: "t"}
+ arr1[2].userName = 't';
+ console.log(arr)//{userName: "t"}
+ //json解析的是对象和数组，不识别函数
+ let arr4 = JSON.parse(JSON.stringify(arr))
+ console.log(arr4) //{userName: "t"}
+ arr4[2].userName = 'bili';
+ console.log(arr4)//{userName: "bili"}
+ console.log(arr)//{userName: "t"}
+ ```
+ 
+  - 如何实现深拷贝？拷贝的数据里不能有对象/数组，即使有对象/数组可以继续遍历对象，数组拿到里面的每一项值，直到拿到的是基本数据类型，然后再去复制，这就是深拷贝。 
+  
+  - 检测数据类型
+  1. Object.prototype.toString.call(obj)
+  2. typeof --undefined,string,boolean,object,function
+  3. Object.prototype.toString.call(obj ).slice(8,-1)
+  
+  ```
+  //for in 对象（属性名） 数组（下标）
+  let str = {userName:'lee',age:32};
+  for(let i in str) {
+  	console.log(i)//userName,age
+  }
+  
+  let arr = [1,2,3,4,5,'abc'];
+  for(let i in arr){
+  	console.log(i) //0,1,2,3,4,5
+  }
+  
+  
+  ```
+  
+  #### set，map容器
+  
+   - set容器：无序不可重复的多个value的集合体
+   1. Set()
+   2. Set(array)
+   3. add(value)
+   4. delete(value)
+   5. has(value)
+   6. clear()
+   7. size
+   
+   - map容器：无序的key不重复的多个key-value的集合体
+   1. Map()
+   2. Map()
+   3. set(key,value) //添加
+   4. get(key)
+   5. delete(key)
+   6. has(key)
+ ```
+ let arr = new Set([1,2,3,2,1]);
+ console.log(arr) //Set(3) {1, 2, 3}
+ arr.add(7);
+ console.log(arr.size,arr) //Set(4) {1, 2, 3, 7}
+
+let map = new Map([['aaa',12],[3,'bb']]);
+console.log(map)//Map(2) {"aaa" => 12, 3 => "bb"}
+map.set(88,'shaun') //Map(3) {"aaa" => 12, 3 => "bb", 88 => "shaun"}
+map.delete(3);
+console.log(map) //Map(2) {"aaa" => 12, 88 => "shaun"}
+
+ ```
+ 
+ #### for of
+ for(let value of target){}遍历循环
+ 1. 遍历数组
+ 2. 遍历set
+ 3. 遍历map
+ 4. 遍历字符串
+ 5. 遍历伪数组
+ ```
+ var arr = [1,2,3,4,5,3,2,1];
+ var arr1 = arr;
+ var arr = [];
+ let set = new Set(arr1)
+ for(let i of set) {
+ arr.push(i)
+ }
+ console.log(arr)
+ 
+ 
+let arr = new Set([1,2,1]);
+ ```
+ #### 指数运算符（幂）**
+ #### Array.prototype.includes(value) : 判断数组中是否包含指定value
+ ```
+ console.log(3**3)   //27
+ 
+ let arr = [1,2,'abc'];
+ arr.includes(2) //true
+ ```
+ 
+ 
  
  
   

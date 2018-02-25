@@ -110,7 +110,7 @@ se6基础语法
  ```
  
  
-####对象 简化的对象的写法
+#### 对象 简化的对象的写法
   - 省略同名的属性值，省略方法function
   - Object.assign(target,source1,source2..)：将源对象的属性复制到目标对象上
   - Object.is(v1,v2):判断2个数据是否完全相同
@@ -367,7 +367,7 @@ console.log(...arr)
           arr1 = [1,...arr2,6]
           let[a,b] = arr1;
           console.log(a,b)
-          ```
+```
 
 #### Generator
  - 概念
@@ -378,16 +378,19 @@ console.log(...arr)
  - 特点
  1. function与函数名之间有一个星号
  2. 内部使用yield表达式来定义不同的状态
- ```
+
+  ```
  function* generatorExample() {
  	let result = yield 'hello'; //状态值为hello
  	yield 'generator'; //状态值为generator
  }
  ```
+
  3. generator函数返回的是指针对象，而不会执行函数内部的逻辑
  4. 调用next方法函数内部逻辑开始执行，遇到yield表达式停止，返回{value:yield后的表达式结果/undefined,done:}
  5. 再次调用next方法会从上一次停止时的yield处开始，直到最后
  6. yield语句返回结果通常为undefined，当调用next方法时传参内容作为启动时yield语句的返回值
+
  ```
  function* myGenerator() {
  	console.log('开始执行');
@@ -415,6 +418,7 @@ let[a,b] = arr1;
 console.log(a,b)
 
  ```
+
  
  #### async(es2017)
   - 概念：真正意义上去解决异步回调的问题，同步流程表达异步操作
@@ -788,7 +792,7 @@ let arr = new Set([1,2,1]);
  #### 指数运算符（幂）**
  #### Array.prototype.includes(value) : 判断数组中是否包含指定value
  ```
- 
+
  console.log(3**3)   //27
  
  let arr = [1,2,'abc'];

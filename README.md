@@ -73,7 +73,7 @@ se6基础语法
  - 不同：
   - let可以改变值和类型，const定义常量不可改变。
   
-  #### 解构赋值
+#### 解构赋值
    - 从数组或对象中提取数据，赋值给多个变量（用途：给多个形参赋值）
    
    ```
@@ -93,6 +93,7 @@ se6基础语法
    }
    foo(obj)
  ```
+
 #### 模版字符串
  - 简化字符串的拼接，模版字符串必须用``包含，变化的部分用${xxx}定义
  1. contains(str) : 判断是否包含指定的字符串
@@ -109,7 +110,7 @@ se6基础语法
  ```
  
  
-  ####对象 简化的对象的写法
+####对象 简化的对象的写法
   - 省略同名的属性值，省略方法function
   - Object.assign(target,source1,source2..)：将源对象的属性复制到目标对象上
   - Object.is(v1,v2):判断2个数据是否完全相同
@@ -127,13 +128,15 @@ se6基础语法
   console.log(obj2) //Object { userName: "shaun", age: 14, run: run() }
   console.log(obj2.run()) //shaun
   ```
-  #### 数组
+
+#### 数组
   1. Array.from(v):将伪数组对象或可遍历对象转换为真数组
   2. Array.of(v1,v2,v3):将一系列值转换为数组 
   3. find(function(value, index, arr){return true}) : 找出第一个满足条件返回true的元素
   4. findIndex(function(value, index, arr){return true}) : 找出第一个满足条件返回true的元素下标
   
-  #### 函数
+
+#### 函数
   - 箭头函数 用来定义匿名函数
   1. 没有参数：() => console.log('a');
   2. 有一个参数：i =>i+1;
@@ -145,6 +148,7 @@ se6基础语法
   1. 简洁
   2. 箭头函数没有自己的this，箭头函数的this不是调用的时候决定的，而是在定义的时候处在的对象就是他的this
   3. 箭头函数的this要看外层是否有函数，有，指向外层函数，没有，指向window
+
   ```
   var obj = {
   	name:'dog',
@@ -158,39 +162,43 @@ se6基础语法
   //obj.run = () =>{}
   ```
   
-  #### 三点运算符
+
+#### 三点运算符
   1. rest(可变)参数
   用来代替arguments但是比arguments灵活，只能在最后部分形参参数
+
   ```
 function foo(...value) {
 	console.log(arguments)
-	/*
-	arguments.forEach(function(item,index) {
-		console.log(item,index)
-	})
-	*/
+	//arguments.forEach(function(item,index) {
+	//	console.log(item,index)
+	//})
+	
 	console.log(value);
 	value.forEach(function(item,index){
 		console.log(item,index)
 	}) 
 }
 foo(2,3,4,5)
-
 let arr = [1,6];
 let arr1 = [2,3,4,5];
 arr = [1,...arr1,6]
 console.log(arr);
 console.log(...arr)
 ```
+
 #### 形参默认值 当不传入参数的时候默认使用形参里面的默认值
-```
-function point(x=1,y=2) {
+
+  ```
+  function point(x=1,y=2) {
 	this.x = x;
 	this.y = y;
-}
-```
+  }
+  ```
+
 #### promise
  - 理解：promise对象代表了未来将要发生的事件，一个异步操作，可以将异步操作以同步的流程表达出来，避免了层层嵌套的回调函数。
+
  ```
  //创建promise对象
  let promise = new Promise(resolve,reject){ //初始化状态为pending
@@ -260,13 +268,16 @@ function point(x=1,y=2) {
  	},(error)=>{
  		error
  	})
+
  ```
- #### symbol
+
+#### symbol
  1. smbol属性对于的值是唯一的，解决命名冲突问题。
  2. symbol值不能与其他数据进行计算，包括同字符串拼串。
  3. for in，for of遍历时不会遍历symbol属性。
  
   - 调用symbol函数得到symbol值
+
   ```
   let symbol = Symbol();
   let obj = {};
@@ -284,7 +295,7 @@ function point(x=1,y=2) {
   - 内置symbol值
 
  
- #### iterator 一种接口机制，为各种不同的数据结构提供统一的访问机制。
+#### iterator 一种接口机制，为各种不同的数据结构提供统一的访问机制。
   - 作用
   1. 为各种数据结构，提供一种统一的，简便的访问接口；
   2. 使得数据结构的成员能够按某种次序排列
@@ -305,6 +316,7 @@ function point(x=1,y=2) {
    3. set容器
    4. map容器
    5. string
+
    ```
    //模拟指针对象（遍历器对象）
    function myIterator(arr) {//iterator接口
@@ -339,26 +351,24 @@ function point(x=1,y=2) {
     }
     foo(1,2,3,4,5，'abc')
 
-let targetDate = {
-[symbol.iterator]:function() {
-let nextIndex = 0;
-return{
-next:function() {
-return nextIndex <this.length?{value:this[nextINdex++]},done:false:value:undefined,done:true}
-}
-}
-}
+    let targetDate = {
+        [symbol.iterator]:function() {
+    let nextIndex = 0;
+        return{
+               next:function() {
+              return nextIndex <this.length?{value:this[nextINdex++]},done:false:value:undefined,done:true}
+           }
+         }
+      }
+      //将iterator接口部署到指定的数据类型上，可以使用for of去循环遍历
+      //使用三点运算符，解构赋值，默认调用iterator接口
+          var arr1 = [1,6];
+          var arr2 = [2,3,4,5];
+          arr1 = [1,...arr2,6]
+          let[a,b] = arr1;
+          console.log(a,b)
+          ```
 
-//将iterator接口部署到指定的数据类型上，可以使用for of去循环遍历
-
-//使用三点运算符，解构赋值，默认调用iterator接口
-var arr1 = [1,6];
-var arr2 = [2,3,4,5];
-arr1 = [1,...arr2,6]
-let[a,b] = arr1;
-console.log(a,b)
-
-```
 #### Generator
  - 概念
 1. es6提供的解决异步编程的方案之一
@@ -396,37 +406,14 @@ result = MG.next('我的值会是yield');//函数再次启动
 console.log(result);//{value:''}//{value:'我的值会是yield',done:false}
 ewsult = MG.next() 
 console.log( result) //{value:undefined,done:true}
+//将iterator接口部署到指定的数据类型上，可以使用for of去循环遍历
+//使用三点运算符，解构赋值，默认调用iterator接口
+var arr1 = [1,6];
+var arr2 = [2,3,4,5];
+arr1 = [1,...arr2,6]
+let[a,b] = arr1;
+console.log(a,b)
 
-let obj = {userName:'lee',age:12};
-for(var i of obj) {
-console.log(i)}  //报错
-
-let obj = {userName:'darker',age:14}
-obj[Symbol.iterator] = function* myTest() {
-yield 1
-yield 2
-yield 3
-}
-for(let i of obj) {
-console.log(i)
-}
-
-
-function getNews(url) {
-$.get(url,function(data) {
-console.log(data);
-let url = 'http://locaohost:3000' + data.commentUrl;
-SX.next(url);
-})
-}
-function* sendXML() {
-let url = yield getNews('http://localhost:3000/news?id=3');
-yield getNees(url)
-}
-
-//获取遍历器对象
-let SX = sendXML();
-SX.next()
  ```
  
  #### async(es2017)
@@ -519,13 +506,14 @@ SX.next()
   }
   ```
  
- #### class 类的使用
+#### class 类的使用
  1. 通过class定义类/实现类的继承
  2. 在类中通过constructor定义构造方法
  3. 通过new来创建类的实例
  4. 通过extend来实现类的继承
  5. 通过super调用父类的构造方法
  6. 重写从父类中继承的一般方法
+
  ```
  function Person(name,age) {
  	this.name = name;
@@ -562,7 +550,7 @@ SX.next()
  p1.showName()
  ```
  
- #### es6字符串，数组的扩展
+#### es6字符串，数组的扩展
  1. includes(str) : 判断是否包含指定的字符串
  2. startsWith(str) : 判断是否以指定字符串开头
  3. endWidth(str): 判断是否以指定的字符串结尾
@@ -575,7 +563,7 @@ SX.next()
 str.repeat(3)  //"abcdefjaabcdefjaabcdefja"
  ```
  
- #### 数值的扩展
+#### 数值的扩展
  1. 二进制与八进制数值表示法：二进制用0b，八进制用0o
  2. Number.isFinite(i) : 判断是否是有限大的数
  3. Number.isNaN(i) : 判断是否为NaN
@@ -597,7 +585,7 @@ str.repeat(3)  //"abcdefjaabcdefjaabcdefja"
  
  ```
  
- #### 数组方法的扩展
+#### 数组方法的扩展
  1. Array.from(v) : 将伪数组对象或可遍历对象转化为真数组
  2. Array.of(v1,v2,v3) : 将一系列值转化为数组
  3. find(function(value,index,arr){return true}) :找出第一个满足条件返回true的元素
@@ -625,7 +613,7 @@ str.repeat(3)  //"abcdefjaabcdefjaabcdefja"
  
  ```
  
- #### 对象方法的扩展
+#### 对象方法的扩展
  1. Object.is(v1,v2) : 判断两个数据是否完全相同
  2. Object.assign(target,source1,source2 ... ) : 将源对象的属性复制到目标对象上
  3. 直接操作 __proto__属性
@@ -650,9 +638,10 @@ str.repeat(3)  //"abcdefjaabcdefjaabcdefja"
  console.log(obj4.money)//100
  ```
  
- #### 深度克隆
- ```
- let str = 123;
+#### 深度克隆
+
+  ```
+   let str = 123;
  let str2 = str;
  console.log(str2)//123
  str2 = 'a';
@@ -677,8 +666,7 @@ str.repeat(3)  //"abcdefjaabcdefjaabcdefja"
  let arr2 = arr1;
  arr2[0] = 'yes';
  console.log(arr1,arr2)//(4) ["yes", 2, true, "abc"] (4) ["yes", 2, true, "abc"]
-
- ```
+  ```
  
   - 拷贝数据
   1. 基本拷贝：会生成新的数据，修改拷贝后的数据不影响原数据
@@ -744,7 +732,7 @@ str.repeat(3)  //"abcdefjaabcdefjaabcdefja"
   
   ```
   
-  #### set，map容器
+#### set，map容器
   
    - set容器：无序不可重复的多个value的集合体
    1. Set()
@@ -776,7 +764,7 @@ console.log(map) //Map(2) {"aaa" => 12, 88 => "shaun"}
 
  ```
  
- #### for of
+#### for of
  for(let value of target){}遍历循环
  1. 遍历数组
  2. 遍历set
@@ -795,10 +783,12 @@ console.log(map) //Map(2) {"aaa" => 12, 88 => "shaun"}
  
  
 let arr = new Set([1,2,1]);
+
  ```
  #### 指数运算符（幂）**
  #### Array.prototype.includes(value) : 判断数组中是否包含指定value
  ```
+ 
  console.log(3**3)   //27
  
  let arr = [1,2,'abc'];
